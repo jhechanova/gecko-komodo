@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -65,27 +66,47 @@ class FcmService {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    await _localNotifications.initialize(
-      const InitializationSettings(android: androidInit),
+    const darwinInit = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
     );
-
-    final androidPlugin =
-        _localNotifications.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
-    await androidPlugin?.createNotificationChannel(
-      const AndroidNotificationChannel(
-        _channelId,
-        _channelName,
-        description: _channelDescription,
-        importance: Importance.high,
+    await _localNotifications.initialize(
+      const InitializationSettings(
+        android: androidInit,
+        iOS: darwinInit,
       ),
     );
+
+    if (!kIsWeb && Platform.isAndroid) {
+      final androidPlugin =
+          _localNotifications.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+      await androidPlugin?.createNotificationChannel(
+        const AndroidNotificationChannel(
+          _channelId,
+          _channelName,
+          description: _channelDescription,
+          importance: Importance.high,
+        ),
+      );
+    }
 
     await messaging.requestPermission(
       alert: true,
       badge: true,
       sound: true,
+      provisional: false,
     );
+
+    // iOS: show system banners while app is in foreground.
+    if (!kIsWeb && Platform.isIOS) {
+      await messaging.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
 
     FirebaseMessaging.onMessage.listen(_onForegroundMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpened);
@@ -99,7 +120,16 @@ class FcmService {
 
   Future<void> _onForegroundMessage(RemoteMessage message) async {
     await _persistRemoteMessage(message);
-    await _showLocalNotification(message);
+
+    // Android always needs a local notification in foreground.
+    // iOS uses setForegroundNotificationPresentationOptions for notification
+    // payloads; still show a local notification for data-only messages.
+    final isAndroid = !kIsWeb && Platform.isAndroid;
+    final isDataOnlyIos =
+        !kIsWeb && Platform.isIOS && message.notification == null;
+    if (isAndroid || isDataOnlyIos) {
+      await _showLocalNotification(message);
+    }
   }
 
   Future<void> _onMessageOpened(RemoteMessage message) async {
@@ -125,6 +155,11 @@ class FcmService {
           channelDescription: _channelDescription,
           importance: Importance.high,
           priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
         ),
       ),
       payload: jsonEncode(message.data),
