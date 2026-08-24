@@ -44,7 +44,8 @@ class AppUser {
       firstName: json['first_name']?.toString() ?? '',
       lastName: json['last_name']?.toString() ?? '',
       username: username,
-      fcmToken: json['fcm_token']?.toString() ?? '',
+      // Device FCM token is registered separately; not taken from login.
+      fcmToken: '',
     );
   }
 

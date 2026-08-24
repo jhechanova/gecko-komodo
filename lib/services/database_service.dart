@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/app_message.dart';
 import '../models/app_user.dart';
@@ -12,6 +13,8 @@ class DatabaseService {
   static const _dbVersion = 1;
 
   static const settingsKeyBaseUrl = 'base_url';
+  static const settingsKeyDeviceId = 'device_id';
+  static const deviceIdMaxLength = 50;
 
   Database? _db;
 
@@ -57,25 +60,47 @@ class DatabaseService {
     );
   }
 
-  Future<String?> getBaseUrl() async {
+  Future<String?> _getSetting(String key) async {
     final db = await database;
     final rows = await db.query(
       'settings',
       where: 'key = ?',
-      whereArgs: [settingsKeyBaseUrl],
+      whereArgs: [key],
       limit: 1,
     );
     if (rows.isEmpty) return null;
     return rows.first['value'] as String?;
   }
 
-  Future<void> setBaseUrl(String url) async {
+  Future<void> _setSetting(String key, String value) async {
     final db = await database;
     await db.insert(
       'settings',
-      {'key': settingsKeyBaseUrl, 'value': url},
+      {'key': key, 'value': value},
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  Future<String?> getBaseUrl() => _getSetting(settingsKeyBaseUrl);
+
+  Future<void> setBaseUrl(String url) => _setSetting(settingsKeyBaseUrl, url);
+
+  /// Stable per-install id (max [deviceIdMaxLength] chars) for multi-device FCM.
+  Future<String> getOrCreateDeviceId() async {
+    final existing = await _getSetting(settingsKeyDeviceId);
+    if (existing != null && existing.isNotEmpty) {
+      if (existing.length <= deviceIdMaxLength) return existing;
+      final truncated = existing.substring(0, deviceIdMaxLength);
+      await _setSetting(settingsKeyDeviceId, truncated);
+      return truncated;
+    }
+
+    final generated = const Uuid().v4().replaceAll('-', '');
+    final deviceId = generated.length <= deviceIdMaxLength
+        ? generated
+        : generated.substring(0, deviceIdMaxLength);
+    await _setSetting(settingsKeyDeviceId, deviceId);
+    return deviceId;
   }
 
   Future<AppUser?> getUser() async {

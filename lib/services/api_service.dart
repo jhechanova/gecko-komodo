@@ -53,12 +53,14 @@ class ApiService {
     required String baseUrl,
     required String userId,
     required String fcmToken,
+    required String deviceId,
   }) async {
     final uri = _apiUri(baseUrl, {
       'tpl': 'fcm_token',
       'tph': 'set_fcm_token',
       'user_id': userId,
       'fcm_token': fcmToken,
+      'device_id': deviceId,
     });
 
     final response = await http.get(uri);

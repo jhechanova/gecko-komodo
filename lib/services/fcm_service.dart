@@ -181,10 +181,13 @@ class FcmService {
     final baseUrl = await db.getBaseUrl();
     if (user == null || baseUrl == null || baseUrl.isEmpty) return;
 
+    final deviceId = await db.getOrCreateDeviceId();
+
     await ApiService.instance.registerFcmToken(
       baseUrl: baseUrl,
       userId: user.id,
       fcmToken: token,
+      deviceId: deviceId,
     );
 
     await db.saveUser(user.copyWith(fcmToken: token));

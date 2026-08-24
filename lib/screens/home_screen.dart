@@ -61,6 +61,46 @@ class _HomeScreenState extends State<HomeScreen> {
     return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
   }
 
+  Future<void> _openMessage(AppMessage msg) async {
+    if (msg.id != null && !msg.isRead) {
+      await DatabaseService.instance.markMessageRead(msg.id!);
+      await _loadMessagesOnly();
+    }
+    if (!mounted) return;
+
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(msg.title.isEmpty ? 'Notification' : msg.title),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _formatTime(msg.receivedAt),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  msg.body.isEmpty ? '(No content)' : msg.body,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,13 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           _formatTime(msg.receivedAt),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
-                        onTap: () async {
-                          if (msg.id != null && !msg.isRead) {
-                            await DatabaseService.instance
-                                .markMessageRead(msg.id!);
-                            await _loadMessagesOnly();
-                          }
-                        },
+                        onTap: () => _openMessage(msg),
                       );
                     },
                   ),
