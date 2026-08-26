@@ -1,3 +1,7 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -49,4 +53,39 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+}
+
+// Flutter copies the release APK to outputs/flutter-apk/app-release.apk.
+// After that, also publish a dated artifact: notif-app-yyyyMMdd-HHmmss.apk
+afterEvaluate {
+    tasks.named("assembleRelease").configure {
+        doLast {
+            val apkDir = layout.buildDirectory.dir("outputs/flutter-apk").get().asFile
+            val source = apkDir.resolve("app-release.apk")
+            if (!source.exists()) {
+                return@doLast
+            }
+
+            val timestamp =
+                SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
+            val datedName = "notif-app-$timestamp.apk"
+
+            apkDir.listFiles()
+                ?.filter { file ->
+                    file.name.startsWith("notif-app-") &&
+                        (file.name.endsWith(".apk") || file.name.endsWith(".apk.sha1"))
+                }
+                ?.forEach { it.delete() }
+
+            val destination = apkDir.resolve(datedName)
+            source.copyTo(destination, overwrite = true)
+
+            val sourceSha1 = apkDir.resolve("app-release.apk.sha1")
+            if (sourceSha1.exists()) {
+                sourceSha1.copyTo(apkDir.resolve("$datedName.sha1"), overwrite = true)
+            }
+
+            logger.lifecycle("Release APK also available at: ${destination.path}")
+        }
+    }
 }

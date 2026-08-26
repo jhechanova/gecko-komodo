@@ -27,10 +27,15 @@ class ApiService {
     return Uri.parse('$normalized/app/api.cf').replace(queryParameters: query);
   }
 
-  Future<LoginResult> login(String baseUrl, String username) async {
+  Future<LoginResult> login(
+    String baseUrl,
+    String username,
+    String password,
+  ) async {
     final uri = _apiUri(baseUrl, {
       'tpl': 'login',
       'username': username,
+      'password': password,
     });
 
     try {
