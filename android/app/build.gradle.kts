@@ -56,7 +56,7 @@ dependencies {
 }
 
 // Flutter copies the release APK to outputs/flutter-apk/app-release.apk.
-// After that, also publish a dated artifact: notif-app-yyyyMMdd-HHmmss.apk
+// After that, also publish a dated artifact: komodo-yyyyMMdd-HHmmss.apk
 afterEvaluate {
     tasks.named("assembleRelease").configure {
         doLast {
@@ -68,11 +68,11 @@ afterEvaluate {
 
             val timestamp =
                 SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
-            val datedName = "notif-app-$timestamp.apk"
+            val datedName = "komodo-$timestamp.apk"
 
             apkDir.listFiles()
                 ?.filter { file ->
-                    file.name.startsWith("notif-app-") &&
+                    file.name.startsWith("komodo-") &&
                         (file.name.endsWith(".apk") || file.name.endsWith(".apk.sha1"))
                 }
                 ?.forEach { it.delete() }

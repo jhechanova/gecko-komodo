@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build Android/iOS release artifacts named: notif-app-yyyyMMdd-HHmmss.{apk,ipa}
+# Build Android/iOS release artifacts named: komodo-yyyyMMdd-HHmmss.{apk,ipa}
 set -euo pipefail
 
 usage() {
@@ -9,7 +9,7 @@ usage() {
 
 [[ $# -ge 1 ]] || usage
 
-PREFIX="notif-app"
+PREFIX="komodo"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
@@ -20,7 +20,7 @@ rename_android() {
   local dst="${apk_dir}/${PREFIX}-${TIMESTAMP}.apk"
 
   if [[ ! -f "$src" ]]; then
-    # Gradle may have already created a dated copy; prefer the newest notif-app-*.apk.
+    # Gradle may have already created a dated copy; prefer the newest komodo-*.apk.
     local latest
     latest="$(ls -t "${apk_dir}"/${PREFIX}-*.apk 2>/dev/null | head -n 1 || true)"
     if [[ -n "${latest}" && -f "${latest}" ]]; then
