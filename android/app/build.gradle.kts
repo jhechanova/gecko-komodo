@@ -25,8 +25,8 @@ android {
         applicationId = "com.example.notifapp.notif_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        // Firebase Messaging requires minSdk 21+
-        minSdk = maxOf(flutter.minSdkVersion, 21)
+        // dynamic_app_icon_flutter_plus requires minSdk 24+
+        minSdk = maxOf(flutter.minSdkVersion, 24)
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

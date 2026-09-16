@@ -5,7 +5,10 @@
     <application
         android:label="Komodo"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules">
+        <!-- MainActivity has no LAUNCHER filter; aliases own the home-screen entry. -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -14,11 +17,22 @@
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize">
-            <!-- Specifies an Android theme to apply to this Activity as soon as
-                 the Android process has started. This theme is visible to the user
-                 while the Flutter UI initializes. After that, this theme continues
-                 to determine the Window background behind the Flutter UI. -->
+            android:windowSoftInputMode="adjustResize"
+            android:enabled="true">
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+        </activity>
+
+        <activity-alias
+            android:label="Komodo"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher"
+            android:name="${applicationId}.MainActivity.default"
+            android:exported="true"
+            android:enabled="true"
+            android:targetActivity=".MainActivity">
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
@@ -27,7 +41,98 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <activity-alias
+            android:label="Komodo"
+            android:icon="@mipmap/ic_scsc"
+            android:roundIcon="@mipmap/ic_scsc"
+            android:name="${applicationId}.MainActivity.scsc"
+            android:exported="true"
+            android:enabled="false"
+            android:targetActivity=".MainActivity">
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:label="Komodo"
+            android:icon="@mipmap/ic_hijas"
+            android:roundIcon="@mipmap/ic_hijas"
+            android:name="${applicationId}.MainActivity.hijas"
+            android:exported="true"
+            android:enabled="false"
+            android:targetActivity=".MainActivity">
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:label="Komodo"
+            android:icon="@mipmap/ic_stccebu"
+            android:roundIcon="@mipmap/ic_stccebu"
+            android:name="${applicationId}.MainActivity.stccebu"
+            android:exported="true"
+            android:enabled="false"
+            android:targetActivity=".MainActivity">
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:label="Komodo"
+            android:icon="@mipmap/ic_sbcec"
+            android:roundIcon="@mipmap/ic_sbcec"
+            android:name="${applicationId}.MainActivity.sbcec"
+            android:exported="true"
+            android:enabled="false"
+            android:targetActivity=".MainActivity">
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:label="Komodo"
+            android:icon="@mipmap/ic_pcgs"
+            android:roundIcon="@mipmap/ic_pcgs"
+            android:name="${applicationId}.MainActivity.pcgs"
+            android:exported="true"
+            android:enabled="false"
+            android:targetActivity=".MainActivity">
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

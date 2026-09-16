@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../services/database_service.dart';
 import '../services/fcm_service.dart';
+import '../widgets/school_logo.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -19,6 +20,19 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _loading = false;
   bool _obscurePassword = true;
   String? _error;
+  String? _baseUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBaseUrl();
+  }
+
+  Future<void> _loadBaseUrl() async {
+    final url = await DatabaseService.instance.getBaseUrl();
+    if (!mounted) return;
+    setState(() => _baseUrl = url);
+  }
 
   @override
   void dispose() {
@@ -82,6 +96,10 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Center(
+                  child: SchoolLogo(url: _baseUrl, size: 96),
+                ),
+                const SizedBox(height: 24),
                 Text(
                   'Enter your credentials to receive notifications.',
                   style: Theme.of(context).textTheme.bodyLarge,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../services/app_icon_service.dart';
 import '../services/database_service.dart';
+import '../widgets/school_logo.dart';
 import 'login_screen.dart';
 
 class UrlSetupScreen extends StatefulWidget {
@@ -14,9 +16,21 @@ class _UrlSetupScreenState extends State<UrlSetupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _urlController = TextEditingController();
   bool _saving = false;
+  String _previewUrl = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _urlController.addListener(_onUrlChanged);
+  }
+
+  void _onUrlChanged() {
+    setState(() => _previewUrl = _urlController.text);
+  }
 
   @override
   void dispose() {
+    _urlController.removeListener(_onUrlChanged);
     _urlController.dispose();
     super.dispose();
   }
@@ -43,6 +57,7 @@ class _UrlSetupScreenState extends State<UrlSetupScreen> {
         url.endsWith('/') ? url.substring(0, url.length - 1) : url;
 
     await DatabaseService.instance.setBaseUrl(normalized);
+    await AppIconService.instance.applyForUrl(normalized);
 
     if (!mounted) return;
     setState(() => _saving = false);
@@ -63,6 +78,10 @@ class _UrlSetupScreenState extends State<UrlSetupScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Center(
+                  child: SchoolLogo(url: _previewUrl, size: 96),
+                ),
+                const SizedBox(height: 24),
                 Text(
                   'Enter the base URL of your notification server.',
                   style: Theme.of(context).textTheme.bodyLarge,

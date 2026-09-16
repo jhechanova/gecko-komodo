@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/app_message.dart';
 import '../services/database_service.dart';
 import '../services/fcm_service.dart';
+import '../widgets/school_logo.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<AppMessage> _messages = [];
   bool _loading = true;
   String? _userLabel;
+  String? _baseUrl;
 
   @override
   void initState() {
@@ -36,10 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _load() async {
     setState(() => _loading = true);
     final user = await DatabaseService.instance.getUser();
+    final baseUrl = await DatabaseService.instance.getBaseUrl();
     final messages = await DatabaseService.instance.getMessages();
     if (!mounted) return;
     setState(() {
       _userLabel = user?.displayName;
+      _baseUrl = baseUrl;
       _messages = messages;
       _loading = false;
     });
@@ -105,6 +109,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SchoolLogo(url: _baseUrl, size: 32),
+        ),
         title: const Text('Messages'),
         actions: [
           if (_userLabel != null)

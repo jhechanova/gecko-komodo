@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/url_setup_screen.dart';
+import 'services/app_icon_service.dart';
 import 'services/database_service.dart';
 import 'services/fcm_service.dart';
 
@@ -57,6 +58,7 @@ class _AppInitializerState extends State<AppInitializer> {
     if (baseUrl == null || baseUrl.isEmpty) {
       return const UrlSetupScreen();
     }
+    await AppIconService.instance.applyForUrl(baseUrl);
     final user = await db.getUser();
     if (user == null) {
       return const LoginScreen();
