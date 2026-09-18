@@ -1,0 +1,22 @@
+# Server FCM cutover (gecko-komodo) — do this on the API host, not in this repo
+
+## 1. New service account key
+1. Firebase Console → project **gecko-komodo** → Project settings → Service accounts
+2. Generate new private key (Firebase Admin SDK)
+3. Save only on the server as `/u1/app/api/auth/fcm.json` (overwrite)
+4. Do not commit the key. Do not paste the private_key into chat.
+
+## 2. Send URL project_id
+If messages:send hardcodes the old project, change:
+  https://fcm.googleapis.com/v1/projects/notifapp-f69a2/messages:send
+to:
+  https://fcm.googleapis.com/v1/projects/gecko-komodo/messages:send
+Prefer reading project_id from fcm.json.
+
+If android.restricted_package_name is set, use com.gecko.komodo or omit it.
+
+## 3. Revoke leaked old key
+On old GCP project notifapp-f69a2 → IAM → firebase-adminsdk-fbsvc@notifapp-f69a2 → Keys → delete the key that was pasted in chat.
+
+## 4. Smoke
+Install com.gecko.komodo → log in once → send a test push with the new fcm.json.

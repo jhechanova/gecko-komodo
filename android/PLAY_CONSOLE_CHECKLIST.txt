@@ -1,0 +1,28 @@
+# Play Console checklist (new Google account)
+
+AAB ready at:
+  build/app/outputs/bundle/release/app-release.aab
+Package / application ID:
+  com.gecko.komodo
+Upload key SHA-1 (add in Firebase Android app):
+  see android/UPLOAD_KEY_FINGERPRINTS.txt
+
+## Play Console
+1. Sign in with the NEW Google account (complete $25 Play developer registration if needed).
+2. Create app: Komodo, free/paid as appropriate.
+3. Upload AAB to Internal testing first.
+4. Store listing: title, short/full description, 512x512 icon (assets/icon/app_icon.png),
+   at least 2 phone screenshots,
+   1024x500 feature graphic: assets/store/play_feature_graphic.png
+   (copy also at android/play_feature_graphic.png).
+5. Privacy policy URL (required — login + FCM tokens).
+6. Data safety: account info, device IDs, push tokens; no ads.
+7. Content rating questionnaire (school app — declare age honestly).
+8. Declare notifications / POST_NOTIFICATIONS in App content.
+9. After first upload: Play Console → App signing → copy App signing key SHA-1
+   → Firebase gecko-komodo Android app → add fingerprint.
+
+## Also finish
+- android/FCM_SERVER_CUTOVER.txt (new fcm.json + revoke old key)
+- Back up android/upload-keystore.jks and android/key.properties offline
+  (gitignored — losing them blocks updates)

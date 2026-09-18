@@ -8,7 +8,7 @@
 PRODUCT_NAME = notif_app
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.notifapp.notifApp
+PRODUCT_BUNDLE_IDENTIFIER = com.gecko.komodo
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.example.notifapp. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 com.gecko.komodo. All rights reserved.

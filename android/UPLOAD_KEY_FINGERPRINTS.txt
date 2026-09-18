@@ -1,0 +1,10 @@
+# Upload key certificate fingerprints for Firebase / Play
+# Add these to the NEW Firebase Android app (com.gecko.komodo) → SHA certificate fingerprints.
+# After first Play upload, also add the Play App Signing certificate SHA-1 from Play Console.
+
+Alias: upload
+SHA1: EF:97:4D:24:16:0A:CD:7D:B0:39:2D:85:37:FF:BD:B6:31:DA:F1:A2
+SHA256: 72:46:07:61:4A:FA:25:66:0E:6D:97:99:C0:28:51:23:6A:3B:3D:72:12:86:EA:58:9C:A7:94:4C:04:01:86:50
+
+Keystore (gitignored): android/upload-keystore.jks
+Passwords (gitignored): android/key.properties

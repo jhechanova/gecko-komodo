@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "364545310958",
-    "project_id": "notifapp-f69a2",
-    "storage_bucket": "notifapp-f69a2.firebasestorage.app"
+    "project_number": "1013454878902",
+    "project_id": "gecko-komodo",
+    "storage_bucket": "gecko-komodo.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:364545310958:android:eeca5daa73565f604eb3ff",
+        "mobilesdk_app_id": "1:1013454878902:android:7db9389bdf2cd8513a0e17",
         "android_client_info": {
-          "package_name": "com.example.notifapp.notif_app"
+          "package_name": "com.gecko.komodo"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBQ38M0I8oclL_M__QhP8OGmVa1B6YWFwA"
+          "current_key": "AIzaSyCbNYK1986lWUaJyIz6YJ3sbqafsy-MpT8"
         }
       ],
       "services": {

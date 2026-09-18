@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCSRGtsC9Aqi_mX65VVT9ZFcEOmCvdyqZw</string>
+	<string>AIzaSyCoYELbaCaobULk3sT9RYVrxxOUPma6H0c</string>
 	<key>GCM_SENDER_ID</key>
-	<string>364545310958</string>
+	<string>1013454878902</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.notifapp.notifApp</string>
+	<string>com.gecko.komodo</string>
 	<key>PROJECT_ID</key>
-	<string>notifapp-f69a2</string>
+	<string>gecko-komodo</string>
 	<key>STORAGE_BUCKET</key>
-	<string>notifapp-f69a2.firebasestorage.app</string>
+	<string>gecko-komodo.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:364545310958:ios:6450406d9f992def4eb3ff</string>
+	<string>1:1013454878902:ios:7712e84e09bd77803a0e17</string>
 </dict>
 </plist>
