@@ -20,6 +20,20 @@ class ApiService {
   ApiService._();
   static final ApiService instance = ApiService._();
 
+  /// Tries https, then http. Returns the base URL that responds, or null.
+  Future<String?> resolveAccessibleBaseUrl(String host) async {
+    for (final scheme in ['https', 'http']) {
+      final base = '$scheme://$host';
+      try {
+        final response = await http
+            .get(_apiUri(base, const {}))
+            .timeout(const Duration(seconds: 8));
+        if (response.statusCode > 0) return base;
+      } catch (_) {}
+    }
+    return null;
+  }
+
   Uri _apiUri(String baseUrl, Map<String, String> query) {
     final normalized = baseUrl.endsWith('/')
         ? baseUrl.substring(0, baseUrl.length - 1)
@@ -47,10 +61,9 @@ class ApiService {
         return LoginSuccess(AppUser.fromLoginJson(body, username));
       }
 
-      final message = body['message']?.toString() ?? 'Login failed';
-      return LoginFailure(message);
-    } catch (e) {
-      return LoginFailure('Unable to reach server: $e');
+      return LoginFailure('The URL is not accessible.');
+    } catch (_) {
+      return LoginFailure('The URL is not accessible.');
     }
   }
 
@@ -70,9 +83,7 @@ class ApiService {
 
     final response = await http.get(uri);
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(
-        'Failed to register FCM token (${response.statusCode}): ${response.body}',
-      );
+      throw Exception('The URL is not accessible.');
     }
   }
 }

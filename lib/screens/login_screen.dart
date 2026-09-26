@@ -5,6 +5,7 @@ import '../services/database_service.dart';
 import '../services/fcm_service.dart';
 import '../widgets/school_logo.dart';
 import 'home_screen.dart';
+import 'url_setup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,6 +33,17 @@ class _LoginScreenState extends State<LoginScreen> {
     final url = await DatabaseService.instance.getBaseUrl();
     if (!mounted) return;
     setState(() => _baseUrl = url);
+  }
+
+  Future<void> _editServerUrl() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => UrlSetupScreen(initialUrl: _baseUrl ?? ''),
+      ),
+    );
+    if (!mounted) return;
+    setState(() => _error = null);
+    await _loadBaseUrl();
   }
 
   @override
@@ -87,7 +99,14 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(
+        title: const Text('Login'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          tooltip: 'Change server URL',
+          onPressed: _loading ? null : _editServerUrl,
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -104,6 +123,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   'Enter your credentials to receive notifications.',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
+                if (_baseUrl != null && _baseUrl!.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    _baseUrl!,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                ],
                 const SizedBox(height: 24),
                 TextFormField(
                   controller: _usernameController,

@@ -14,15 +14,6 @@
 	<dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
-			<key>scsc</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>scsc</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
 			<key>hijas</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
@@ -32,11 +23,11 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
-			<key>stccebu</key>
+			<key>pcgs</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>stccebu</string>
+					<string>pcgs</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
@@ -50,11 +41,20 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
-			<key>pcgs</key>
+			<key>scsc</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>pcgs</string>
+					<string>scsc</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>stccebu</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>stccebu</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
@@ -74,15 +74,6 @@
 	<dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
-			<key>scsc</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>scsc</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
 			<key>hijas</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
@@ -92,11 +83,11 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
-			<key>stccebu</key>
+			<key>pcgs</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>stccebu</string>
+					<string>pcgs</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
@@ -110,11 +101,20 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
-			<key>pcgs</key>
+			<key>scsc</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>pcgs</string>
+					<string>scsc</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>stccebu</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>stccebu</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
@@ -169,6 +169,11 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -176,20 +181,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notification</string>
 	</array>
 </dict>
 </plist>

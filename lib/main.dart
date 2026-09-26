@@ -79,7 +79,7 @@ class _AppInitializerState extends State<AppInitializer> {
         if (snapshot.hasError) {
           return Scaffold(
             body: Center(
-              child: Text('Failed to start: ${snapshot.error}'),
+              child: const Text('Unable to start the app.'),
             ),
           );
         }
