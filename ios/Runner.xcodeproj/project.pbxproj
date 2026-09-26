@@ -29,6 +29,16 @@
 		B10000012A00000100000008 /* sbcec@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A00000100000018 /* sbcec@3x.png */; };
 		B10000012A00000100000009 /* pcgs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A00000100000019 /* pcgs@2x.png */; };
 		B10000012A0000010000000A /* pcgs@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A0000010000001A /* pcgs@3x.png */; };
+		B10000012A0000010000000B /* hijas@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A0000010000001B /* hijas@2x~ipad.png */; };
+		B10000012A0000010000000C /* hijas@3x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A0000010000001C /* hijas@3x~ipad.png */; };
+		B10000012A0000010000000D /* pcgs@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A0000010000001D /* pcgs@2x~ipad.png */; };
+		B10000012A0000010000000E /* pcgs@3x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A0000010000001E /* pcgs@3x~ipad.png */; };
+		B10000012A0000010000000F /* sbcec@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A0000010000001F /* sbcec@2x~ipad.png */; };
+		B10000012A00000100000021 /* sbcec@3x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A00000100000031 /* sbcec@3x~ipad.png */; };
+		B10000012A00000100000022 /* scsc@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A00000100000032 /* scsc@2x~ipad.png */; };
+		B10000012A00000100000023 /* scsc@3x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A00000100000033 /* scsc@3x~ipad.png */; };
+		B10000012A00000100000024 /* stccebu@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A00000100000034 /* stccebu@2x~ipad.png */; };
+		B10000012A00000100000025 /* stccebu@3x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B10000012A00000100000035 /* stccebu@3x~ipad.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +99,16 @@
 		B10000012A00000100000018 /* sbcec@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sbcec@3x.png"; sourceTree = "<group>"; };
 		B10000012A00000100000019 /* pcgs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pcgs@2x.png"; sourceTree = "<group>"; };
 		B10000012A0000010000001A /* pcgs@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pcgs@3x.png"; sourceTree = "<group>"; };
+		B10000012A0000010000001B /* hijas@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hijas@2x~ipad.png"; sourceTree = "<group>"; };
+		B10000012A0000010000001C /* hijas@3x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hijas@3x~ipad.png"; sourceTree = "<group>"; };
+		B10000012A0000010000001D /* pcgs@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pcgs@2x~ipad.png"; sourceTree = "<group>"; };
+		B10000012A0000010000001E /* pcgs@3x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pcgs@3x~ipad.png"; sourceTree = "<group>"; };
+		B10000012A0000010000001F /* sbcec@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sbcec@2x~ipad.png"; sourceTree = "<group>"; };
+		B10000012A00000100000031 /* sbcec@3x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sbcec@3x~ipad.png"; sourceTree = "<group>"; };
+		B10000012A00000100000032 /* scsc@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scsc@2x~ipad.png"; sourceTree = "<group>"; };
+		B10000012A00000100000033 /* scsc@3x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scsc@3x~ipad.png"; sourceTree = "<group>"; };
+		B10000012A00000100000034 /* stccebu@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stccebu@2x~ipad.png"; sourceTree = "<group>"; };
+		B10000012A00000100000035 /* stccebu@3x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stccebu@3x~ipad.png"; sourceTree = "<group>"; };
 		B7DEFC0AB3373400FB46F4E9 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		BEE05E3BC387632CA908007F /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		DB3D63465160676C74A919AF /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -180,6 +200,16 @@
 				B10000012A00000100000018 /* sbcec@3x.png */,
 				B10000012A00000100000019 /* pcgs@2x.png */,
 				B10000012A0000010000001A /* pcgs@3x.png */,
+				B10000012A0000010000001B /* hijas@2x~ipad.png */,
+				B10000012A0000010000001C /* hijas@3x~ipad.png */,
+				B10000012A0000010000001D /* pcgs@2x~ipad.png */,
+				B10000012A0000010000001E /* pcgs@3x~ipad.png */,
+				B10000012A0000010000001F /* sbcec@2x~ipad.png */,
+				B10000012A00000100000031 /* sbcec@3x~ipad.png */,
+				B10000012A00000100000032 /* scsc@2x~ipad.png */,
+				B10000012A00000100000033 /* scsc@3x~ipad.png */,
+				B10000012A00000100000034 /* stccebu@2x~ipad.png */,
+				B10000012A00000100000035 /* stccebu@3x~ipad.png */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -321,6 +351,16 @@
 				B10000012A00000100000008 /* sbcec@3x.png in Resources */,
 				B10000012A00000100000009 /* pcgs@2x.png in Resources */,
 				B10000012A0000010000000A /* pcgs@3x.png in Resources */,
+				B10000012A0000010000000B /* hijas@2x~ipad.png in Resources */,
+				B10000012A0000010000000C /* hijas@3x~ipad.png in Resources */,
+				B10000012A0000010000000D /* pcgs@2x~ipad.png in Resources */,
+				B10000012A0000010000000E /* pcgs@3x~ipad.png in Resources */,
+				B10000012A0000010000000F /* sbcec@2x~ipad.png in Resources */,
+				B10000012A00000100000021 /* sbcec@3x~ipad.png in Resources */,
+				B10000012A00000100000022 /* scsc@2x~ipad.png in Resources */,
+				B10000012A00000100000023 /* scsc@3x~ipad.png in Resources */,
+				B10000012A00000100000024 /* stccebu@2x~ipad.png in Resources */,
+				B10000012A00000100000025 /* stccebu@3x~ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
