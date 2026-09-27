@@ -16,6 +16,38 @@ class LoginFailure extends LoginResult {
   LoginFailure(this.message);
 }
 
+LoginResult interpretLoginResponse(
+  int httpStatus,
+  String responseBody,
+  String username,
+) {
+  if (httpStatus == 404) {
+    return LoginFailure('The URL is not accessible.');
+  }
+  if (httpStatus != 200) {
+    return LoginFailure('The URL is not accessible.');
+  }
+
+  try {
+    final decoded = jsonDecode(responseBody);
+    if (decoded is! Map) {
+      return LoginFailure('The URL is not accessible.');
+    }
+    final body = Map<String, dynamic>.from(decoded);
+    final statusCode = body['status_code']?.toString() ?? '';
+
+    if (statusCode == '200') {
+      return LoginSuccess(AppUser.fromLoginJson(body, username));
+    }
+    if (statusCode == '404') {
+      return LoginFailure('User not found.');
+    }
+    return LoginFailure('The URL is not accessible.');
+  } catch (_) {
+    return LoginFailure('The URL is not accessible.');
+  }
+}
+
 class ApiService {
   ApiService._();
   static final ApiService instance = ApiService._();
@@ -54,14 +86,11 @@ class ApiService {
 
     try {
       final response = await http.get(uri);
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      final statusCode = body['status_code']?.toString() ?? '';
-
-      if (statusCode == '200') {
-        return LoginSuccess(AppUser.fromLoginJson(body, username));
-      }
-
-      return LoginFailure('The URL is not accessible.');
+      return interpretLoginResponse(
+        response.statusCode,
+        response.body,
+        username,
+      );
     } catch (_) {
       return LoginFailure('The URL is not accessible.');
     }
