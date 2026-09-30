@@ -1,0 +1,23 @@
+---
+description: Dart patterns for notif_app screens, services, and tests
+globs:
+  - lib/**/*.dart
+  - test/**/*.dart
+alwaysApply: false
+---
+
+# Dart in this app
+
+- Services stay singletons: `ClassName._()` and `static final instance`.
+- After `await` in a `State`, return when `!mounted` before `setState` or `Navigator`.
+- Reuse the existing user-facing sentences. Do not add a second message for the same failure.
+- `AppUser.fromLoginJson` leaves `fcmToken` empty. Only `FcmService.syncToken` writes the device token.
+- One `user` row: `saveUser` deletes, then inserts. Do not query multiple users.
+- Extend `test/login_result_test.dart` or `test/school_branding_test.dart` when the behavior is a pure function.
+
+```dart
+// After an await in State
+final user = await DatabaseService.instance.getUser();
+if (!mounted) return;
+setState(() => _userLabel = user?.displayName);
+```

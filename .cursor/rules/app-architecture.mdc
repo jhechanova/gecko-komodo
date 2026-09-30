@@ -1,0 +1,40 @@
+---
+description: Komodo (notif_app) startup flow, layers, and backend contract
+alwaysApply: true
+---
+
+# Komodo notification app
+
+Flutter package `notif_app`. Home-screen label is **Komodo**. One install talks to one school server.
+
+## Startup
+
+`AppInitializer` chooses the first screen from sqflite:
+
+1. No `base_url` → `UrlSetupScreen`
+2. URL saved, no `user` row → `LoginScreen`
+3. Otherwise → `HomeScreen`, after `AppIconService.applyForUrl`
+
+FCM init failure in `main` is logged and must not block `runApp`.
+
+## Layers
+
+- `lib/screens/` — widgets. Imperative `Navigator` + `MaterialPageRoute`. No named routes and no state-management package.
+- `lib/services/` — `DatabaseService`, `ApiService`, `FcmService`, `AppIconService`. Private constructor plus `ClassName.instance`.
+- `lib/models/` — `AppUser`, `AppMessage` with `toMap` / `fromMap`.
+- `lib/config/school_branding.dart` — pure URL → `SchoolBrand`.
+- `lib/widgets/school_logo.dart` — in-app logo from the brand asset.
+
+## Backend
+
+Calls are GET `{baseUrl}/app/api.cf`. Login uses `tpl=login`. Token registration uses `tpl=fcm_token` and `tph=set_fcm_token`.
+
+`resolveAccessibleBaseUrl` tries `https`, then `http` (8s timeout), and stores the scheme that responds.
+
+Login copy lives in `interpretLoginResponse`: HTTP or parse failures → `The URL is not accessible.`; body `status_code` 404 → `User not found.`; body `status_code` 200 → `LoginSuccess`. New response logic goes in a pure function with a unit test, same as `test/login_result_test.dart`.
+
+Leave GET query-param auth and the current navigation style in place unless the task asks to change them.
+
+## Verify
+
+`flutter analyze` and `flutter test`. This is a mobile app; browser checks are not the verification path.

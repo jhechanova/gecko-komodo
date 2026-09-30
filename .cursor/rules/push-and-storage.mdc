@@ -1,0 +1,27 @@
+---
+description: FCM persistence, notification channel, and sqflite schema rules
+globs:
+  - lib/services/fcm_service.dart
+  - lib/services/database_service.dart
+  - lib/models/**/*.dart
+alwaysApply: false
+---
+
+# Push and local storage
+
+## FCM
+
+- `firebaseMessagingBackgroundHandler` stays top-level with `@pragma('vm:entry-point')`. The background isolate may call `Firebase.initializeApp` and `DatabaseService` only.
+- Persist through `_persistRemoteMessage`, then increment `messageListRevision`. `HomeScreen` listens to that notifier. Do not add a second refresh channel.
+- Title and body: `notification` fields, then `data['title']` / `data['body']`, then `'Notification'` / `''`.
+- Foreground local notification: always on Android. On iOS only when `message.notification == null`, because iOS already presents notification payloads.
+- Android channel id is `notif_app_channel`. Keep it equal to `com.google.firebase.messaging.default_notification_channel_id` in `android/app/src/main/AndroidManifest.xml`.
+- `syncToken` returns immediately unless a user and a non-empty base URL are saved. `device_id` is at most 50 characters.
+
+## sqflite
+
+Database file `notif_app.db`, version `_dbVersion` (currently 1). Tables: `settings`, `user`, `messages`.
+
+There is no `onUpgrade`. A schema change bumps `_dbVersion` and adds `onUpgrade` that alters existing installs. Do not put the new columns only in `onCreate`.
+
+`insertMessage` removes `id` so SQLite assigns it.

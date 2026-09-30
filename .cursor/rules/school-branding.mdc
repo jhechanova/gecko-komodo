@@ -1,0 +1,28 @@
+---
+description: Keep school URL branding, in-app logos, and OS alternate icons in sync
+globs:
+  - lib/config/school_branding.dart
+  - lib/services/app_icon_service.dart
+  - lib/widgets/school_logo.dart
+  - android/app/src/**/AndroidManifest.xml
+  - ios/Runner/Info.plist
+  - test/school_branding_test.dart
+alwaysApply: false
+---
+
+# School branding
+
+`resolveSchoolBrand` is the only URL → brand lookup. Null, empty, and unknown URLs return `defaultSchoolBrand` (`alternateIconName: null`, asset `assets/icon/app_icon.png`).
+
+Match order: host with `www.` stripped, then normalized full URL, then bare host. A new school uses the same id in `_brandsById`, `_hostToBrandId`, and `_fullUrlToBrandId`.
+
+`alternateIconName` must match:
+
+- Android alias `${applicationId}.MainActivity.{id}` in `android/app/src/main/AndroidManifest.xml`. Tenant aliases stay `enabled="false"`; only `.MainActivity.default` starts enabled.
+- The iOS `CFBundleAlternateIcons` key in both `CFBundleIcons` and `CFBundleIcons~ipad`.
+
+In-app logo: `assets/icon/tenants/{id}.png` (`assets/icon/tenants/` is already a pubspec directory asset). OS icons are separate: `mipmap-*/ic_{id}.png` and `ios/Runner/{id}@2x.png`, `@3x.png`, `@2x~ipad.png`, `@3x~ipad.png`.
+
+`android/app/src/debug/AndroidManifest.xml` adds MAIN/LAUNCHER on `MainActivity` and disables the default alias so `flutter run` can launch. Leave that debug merge in place.
+
+When adding a tenant, follow `.cursor/skills/add-school-brand/SKILL.md`.
