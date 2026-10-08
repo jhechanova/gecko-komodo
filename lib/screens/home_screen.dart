@@ -17,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _loading = true;
   String? _userLabel;
   String? _baseUrl;
+  int _messagesRequest = 0;
 
   @override
   void initState() {
@@ -36,23 +37,31 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _load() async {
+    final request = ++_messagesRequest;
     setState(() => _loading = true);
     final user = await DatabaseService.instance.getUser();
     final baseUrl = await DatabaseService.instance.getBaseUrl();
-    final messages = await DatabaseService.instance.getMessages();
     if (!mounted) return;
     setState(() {
       _userLabel = user?.displayName;
       _baseUrl = baseUrl;
+    });
+    final messages = await DatabaseService.instance.getMessages();
+    if (!mounted || request != _messagesRequest) return;
+    setState(() {
       _messages = messages;
       _loading = false;
     });
   }
 
   Future<void> _loadMessagesOnly() async {
+    final request = ++_messagesRequest;
     final messages = await DatabaseService.instance.getMessages();
-    if (!mounted) return;
-    setState(() => _messages = messages);
+    if (!mounted || request != _messagesRequest) return;
+    setState(() {
+      _messages = messages;
+      _loading = false;
+    });
   }
 
   String _formatTime(DateTime dt) {

@@ -4,6 +4,8 @@ import 'dart:io' show Platform;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../models/app_message.dart';
@@ -16,6 +18,8 @@ final ValueNotifier<int> messageListRevision = ValueNotifier<int>(0);
 const String _channelId = 'notif_app_channel';
 const String _channelName = 'Notifications';
 const String _channelDescription = 'Incoming push notifications';
+const MethodChannel _foregroundNotificationChannel =
+    MethodChannel('notif_app/foreground_notification');
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -31,18 +35,50 @@ Future<void> _persistRemoteMessage(RemoteMessage message) async {
   final body =
       notification?.body ?? message.data['body']?.toString() ?? '';
 
-  await DatabaseService.instance.insertMessage(
+  await _persistNotification(
+    messageId: message.messageId,
+    title: title,
+    body: body,
+    data: jsonEncode(message.data),
+  );
+}
+
+Future<void> _persistNotification({
+  String? messageId,
+  required String title,
+  required String body,
+  required String data,
+  DateTime? receivedAt,
+}) async {
+  final inserted = await DatabaseService.instance.insertMessage(
     AppMessage(
       title: title,
       body: body,
-      data: jsonEncode(message.data),
-      receivedAt: DateTime.now(),
+      data: data,
+      receivedAt: receivedAt ?? DateTime.now(),
     ),
+    messageId: messageId,
   );
-  messageListRevision.value++;
+  if (inserted) messageListRevision.value++;
 }
 
-class FcmService {
+Future<void> _persistChannelNotification(Map<String, dynamic> args) async {
+  final rawData = args['data'];
+  final data =
+      rawData is Map ? jsonEncode(Map<String, dynamic>.from(rawData)) : '{}';
+  final receivedAtMs = int.tryParse(args['receivedAt']?.toString() ?? '');
+  await _persistNotification(
+    messageId: args['messageId']?.toString(),
+    title: args['title']?.toString() ?? 'Notification',
+    body: args['body']?.toString() ?? '',
+    data: data,
+    receivedAt: receivedAtMs == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(receivedAtMs),
+  );
+}
+
+class FcmService with WidgetsBindingObserver {
   FcmService._();
   static final FcmService instance = FcmService._();
 
@@ -99,7 +135,8 @@ class FcmService {
       provisional: false,
     );
 
-    // iOS: show system banners while app is in foreground.
+    // Banner and Notification Center listing are applied in AppDelegate.
+    // Firebase's alert option is ignored on iOS 14+.
     if (!kIsWeb && Platform.isIOS) {
       await messaging.setForegroundNotificationPresentationOptions(
         alert: true,
@@ -108,14 +145,86 @@ class FcmService {
       );
     }
 
+    if (!kIsWeb && Platform.isIOS) {
+      _foregroundNotificationChannel.setMethodCallHandler((call) async {
+        if (call.method != 'onForegroundNotification') return;
+        final args = Map<String, dynamic>.from(call.arguments as Map);
+        await _persistChannelNotification(args);
+      });
+      WidgetsBinding.instance.addObserver(this);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _announceNotificationClient();
+        _scheduleDeliveredSync();
+      });
+    }
+
     FirebaseMessaging.onMessage.listen(_onForegroundMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpened);
+    try {
+      final openedMessage = await messaging
+          .getInitialMessage()
+          .timeout(const Duration(seconds: 3));
+      if (openedMessage != null) {
+        await _persistRemoteMessage(openedMessage);
+      }
+    } catch (e) {
+      debugPrint('Initial notification read failed: $e');
+    }
 
     messaging.onTokenRefresh.listen((token) async {
       await syncToken(token);
     });
 
     _initialized = true;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _announceNotificationClient();
+      _scheduleDeliveredSync();
+    }
+  }
+
+  Future<void> _announceNotificationClient() async {
+    if (kIsWeb || !Platform.isIOS) return;
+    try {
+      await _foregroundNotificationChannel
+          .invokeMethod<void>('clientReady')
+          .timeout(const Duration(seconds: 2));
+    } catch (e) {
+      debugPrint('Notification client ready failed: $e');
+    }
+  }
+
+  void _scheduleDeliveredSync() {
+    syncDeliveredNotifications();
+    Future<void>.delayed(
+      const Duration(milliseconds: 1200),
+      syncDeliveredNotifications,
+    );
+  }
+
+  /// Copies Notification Center alerts into the message list. Opening the app
+  /// without tapping the banner still picks them up. The second pass covers
+  /// alerts that land a moment after the app becomes active.
+  Future<void> syncDeliveredNotifications() async {
+    if (kIsWeb || !Platform.isIOS) return;
+    try {
+      final raw = await _foregroundNotificationChannel
+          .invokeMethod<List<dynamic>>('getDeliveredNotifications')
+          .timeout(const Duration(seconds: 3));
+      if (raw != null) {
+        for (final item in raw) {
+          if (item is Map) {
+            await _persistChannelNotification(Map<String, dynamic>.from(item));
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Delivered notification sync failed: $e');
+    }
+    messageListRevision.value++;
   }
 
   Future<void> _onForegroundMessage(RemoteMessage message) async {
@@ -160,6 +269,8 @@ class FcmService {
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
+          presentBanner: true,
+          presentList: true,
         ),
       ),
       payload: jsonEncode(message.data),

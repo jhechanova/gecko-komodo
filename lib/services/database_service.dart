@@ -10,7 +10,7 @@ class DatabaseService {
   static final DatabaseService instance = DatabaseService._();
 
   static const _dbName = 'notif_app.db';
-  static const _dbVersion = 1;
+  static const _dbVersion = 2;
 
   static const settingsKeyBaseUrl = 'base_url';
   static const settingsKeyDeviceId = 'device_id';
@@ -49,6 +49,7 @@ class DatabaseService {
         await db.execute('''
           CREATE TABLE messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            message_id TEXT,
             title TEXT,
             body TEXT,
             data TEXT,
@@ -56,6 +57,11 @@ class DatabaseService {
             is_read INTEGER NOT NULL DEFAULT 0
           )
         ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('ALTER TABLE messages ADD COLUMN message_id TEXT');
+        }
       },
     );
   }
@@ -121,10 +127,25 @@ class DatabaseService {
     await db.delete('user');
   }
 
-  Future<int> insertMessage(AppMessage message) async {
+  /// Returns false when [messageId] was already stored.
+  Future<bool> insertMessage(AppMessage message, {String? messageId}) async {
     final db = await database;
+    if (messageId != null && messageId.isNotEmpty) {
+      final existing = await db.query(
+        'messages',
+        columns: ['id'],
+        where: 'message_id = ?',
+        whereArgs: [messageId],
+        limit: 1,
+      );
+      if (existing.isNotEmpty) return false;
+    }
     final map = message.toMap()..remove('id');
-    return db.insert('messages', map);
+    if (messageId != null && messageId.isNotEmpty) {
+      map['message_id'] = messageId;
+    }
+    await db.insert('messages', map);
+    return true;
   }
 
   Future<List<AppMessage>> getMessages() async {
