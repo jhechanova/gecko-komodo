@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'screens/home_screen.dart';
@@ -43,13 +45,35 @@ class AppInitializer extends StatefulWidget {
   State<AppInitializer> createState() => _AppInitializerState();
 }
 
-class _AppInitializerState extends State<AppInitializer> {
+class _AppInitializerState extends State<AppInitializer>
+    with WidgetsBindingObserver {
   late final Future<Widget> _routeFuture;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _routeFuture = _resolveStartScreen();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_reapplyLauncherIcon());
+    }
+  }
+
+  /// Repairs a launcher alias that Android reset while this process stayed alive.
+  Future<void> _reapplyLauncherIcon() async {
+    final baseUrl = await DatabaseService.instance.getBaseUrl();
+    if (baseUrl == null || baseUrl.isEmpty) return;
+    await AppIconService.instance.applyForUrl(baseUrl);
   }
 
   Future<Widget> _resolveStartScreen() async {

@@ -8,13 +8,38 @@ class AppIconService {
   AppIconService._();
   static final AppIconService instance = AppIconService._();
 
+  static const _androidChannel = MethodChannel('com.gecko.komodo/launcher_icon');
+
+  Future<void> _queue = Future<void>.value();
+
   /// Apply the OS home-screen icon for [brand]. No-ops on unsupported platforms.
-  Future<void> applyBrand(SchoolBrand brand) async {
+  ///
+  /// Calls are serialized so a cold start and a resume do not both observe a
+  /// stale alias state and toggle the launcher twice.
+  Future<void> applyBrand(SchoolBrand brand) {
+    final pending = _queue.then((_) => _applyBrand(brand));
+    _queue = pending.then(
+      (_) {},
+      onError: (Object _, StackTrace _) {},
+    );
+    return pending;
+  }
+
+  Future<void> _applyBrand(SchoolBrand brand) async {
     if (kIsWeb) return;
-    if (defaultTargetPlatform != TargetPlatform.iOS &&
-        defaultTargetPlatform != TargetPlatform.android) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      try {
+        await _androidChannel.invokeMethod<void>('ensure', <String, String?>{
+          'alias': brand.alternateIconName,
+        });
+      } on PlatformException catch (e) {
+        debugPrint('App icon change failed: $e');
+      } catch (e) {
+        debugPrint('App icon change failed: $e');
+      }
       return;
     }
+    if (defaultTargetPlatform != TargetPlatform.iOS) return;
 
     try {
       final supported =
