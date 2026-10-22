@@ -14,7 +14,21 @@ class DatabaseService {
 
   static const settingsKeyBaseUrl = 'base_url';
   static const settingsKeyDeviceId = 'device_id';
+  static const settingsKeyMessageRetention = 'message_retention';
   static const deviceIdMaxLength = 50;
+  static const messageRetentionDefault = 1000;
+  static const messageRetentionOptions = <int>[
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800,
+    900,
+    1000,
+  ];
 
   Database? _db;
 
@@ -90,6 +104,38 @@ class DatabaseService {
   Future<String?> getBaseUrl() => _getSetting(settingsKeyBaseUrl);
 
   Future<void> setBaseUrl(String url) => _setSetting(settingsKeyBaseUrl, url);
+
+  Future<int> getMessageRetention() async {
+    final raw = await _getSetting(settingsKeyMessageRetention);
+    final value = int.tryParse(raw ?? '');
+    if (value != null && messageRetentionOptions.contains(value)) {
+      return value;
+    }
+    return messageRetentionDefault;
+  }
+
+  Future<void> setMessageRetention(int limit) async {
+    if (!messageRetentionOptions.contains(limit)) {
+      throw ArgumentError.value(limit, 'limit', 'not a retention option');
+    }
+    await _setSetting(settingsKeyMessageRetention, '$limit');
+  }
+
+  /// Deletes every message outside the newest [limit] by [received_at].
+  Future<void> trimMessagesToRetention(int limit) async {
+    final db = await database;
+    await db.execute(
+      '''
+      DELETE FROM messages
+      WHERE id NOT IN (
+        SELECT id FROM messages
+        ORDER BY received_at DESC, id DESC
+        LIMIT ?
+      )
+      ''',
+      [limit],
+    );
+  }
 
   /// Stable per-install id (max [deviceIdMaxLength] chars) for multi-device FCM.
   Future<String> getOrCreateDeviceId() async {
